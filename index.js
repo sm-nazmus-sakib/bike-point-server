@@ -1,7 +1,7 @@
 const express = require("express");
 require("dotenv").config();
 const app = express();
-const port =  5000;
+const port = process.env.PORT || 5000;
 const { MongoClient } = require("mongodb");
 const objectId = require("mongodb").ObjectId;
 const corse = require("cors");
@@ -20,7 +20,6 @@ const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 
 async function run() {
   try {
@@ -62,6 +61,24 @@ async function run() {
   });
 
 
+
+    //  my order
+
+    app.get('/myOrder/:email', async (req, res) => {
+      const result = await ordersCollection.find({ email: req.params.email }).toArray()
+      res.send(result)
+  })
+
+
+
+ // insert order and
+
+ app.post("/addOrders", async (req, res) => {
+  const result = await ordersCollection.insertOne(req.body);
+  res.send(result);
+});
+
+
     // Get All services
     app.get("/services", async (req, res) => {
       const cursor = servicesCollection.find({});
@@ -69,36 +86,36 @@ async function run() {
       res.send(services);
     });
 
- //  make admin
+//  //  make admin
 
- app.put("/makeAdmin", async (req, res) => {
-  const filter = { email: req.body.email };
-  const result = await usersCollection.find(filter).toArray();
-  if (result) {
-    const documents = await usersCollection.updateOne(filter, {
-      $set: { role: "admin" },
-    });
-    console.log(documents);
-  }
+//  app.put("/makeAdmin", async (req, res) => {
+//   const filter = { email: req.body.email };
+//   const result = await usersCollection.find(filter).toArray();
+//   if (result) {
+//     const documents = await usersCollection.updateOne(filter, {
+//       $set: { role: "admin" },
+//     });
+//     console.log(documents);
+//   }
 
-});
+// });
 
-// Post USer Info 
-app.post("/addUserInfo", async (req, res) => {
-  console.log("req.body");
-  const result = await usersCollection.insertOne(req.body);
-  res.send(result);
-  console.log(result);
-});
+// // Post USer Info 
+// app.post("/addUserInfo", async (req, res) => {
+//   console.log("req.body");
+//   const result = await usersCollection.insertOne(req.body);
+//   res.send(result);
+//   console.log(result);
+// });
 
-// check admin or not
-app.get("/checkAdmin/:email", async (req, res) => {
-  const result = await usersCollection
-    .find({ email: req.params.email })
-    .toArray();
-  console.log(result);
-  res.send(result);
-});
+// // check admin or not
+// app.get("/checkAdmin/:email", async (req, res) => {
+//   const result = await usersCollection
+//     .find({ email: req.params.email })
+//     .toArray();
+//   console.log(result);
+//   res.send(result);
+// });
 
 
 
