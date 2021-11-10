@@ -95,6 +95,13 @@ async function run() {
       res.send(result);
     });
 
+     /// all order
+  app.get("/allOrders", async (req, res) => {
+    const result = await ordersCollection.find({}).toArray();
+    res.send(result);
+  });
+
+
     //  //  make admin
 
     //  app.put("/makeAdmin", async (req, res) => {
