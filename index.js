@@ -103,6 +103,13 @@ async function run() {
       res.json(result);
     });
 
+// Add User Info 
+app.post("/addUserInfo", async (req, res) => {
+  console.log("req.body");
+  const result = await usersCollection.insertOne(req.body);
+  res.send(result);
+  console.log(result);
+});
 
      /// all order
   app.get("/allOrders", async (req, res) => {
