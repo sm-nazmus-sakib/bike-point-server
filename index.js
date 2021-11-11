@@ -95,11 +95,22 @@ async function run() {
       res.send(result);
     });
 
+     //Delete User Order
+     app.delete("/myOrder/:_id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: objectId(id) };
+      const result = await ordersCollection.deleteOne(query);
+      res.json(result);
+    });
+
+
      /// all order
   app.get("/allOrders", async (req, res) => {
     const result = await ordersCollection.find({}).toArray();
     res.send(result);
   });
+
+
 
 
     app.listen(port, () => {
