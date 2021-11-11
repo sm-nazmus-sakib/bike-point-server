@@ -117,7 +117,16 @@ app.post("/addUserInfo", async (req, res) => {
     res.send(result);
   });
 
+ //  Create A New admin
 
+ app.put("/makeAdmin", async (req, res) => {
+  const filter = { email: req.body.email };
+  const result = await usersCollection.find(filter).toArray();
+  if (result) {
+    const documents = await usersCollection.updateOne(filter, {
+      $set: { role: "admin" },
+    });
+  }
 
 
     app.listen(port, () => {
