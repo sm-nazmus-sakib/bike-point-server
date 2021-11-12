@@ -9,14 +9,14 @@ const corse = require("cors");
 // User Id & Password
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.od1ig.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
-// middleware
-app.use(corse());
-app.use(express.json());
-
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
+// middleware
+app.use(corse());
+app.use(express.json());
 
 async function run() {
   try {
@@ -38,6 +38,7 @@ async function run() {
       console.log("Send the Data in Database", service);
       const result = await servicesCollection.insertOne(service);
       res.send(result);
+     
     });
 
     // Get All services
@@ -47,7 +48,7 @@ async function run() {
       res.send(services);
     });
 
-    //   Get Service Details
+    //   Get Single Service Details
     app.get("/services/:id", async (req, res) => {
       const id = req.params.id;
       console.log("get 1 Service id", id);
@@ -79,7 +80,7 @@ async function run() {
       res.send(reviews);
     });
 
-    // insert order and
+    // insert order
 
     app.post("/addOrders", async (req, res) => {
       const result = await ordersCollection.insertOne(req.body);
@@ -95,39 +96,49 @@ async function run() {
       res.send(result);
     });
 
-     //Delete User Order
-     app.delete("/allOrders/:id", async (req, res) => {
+    /// all order
+    app.get("/allOrders", async (req, res) => {
+      const result = await ordersCollection.find({}).toArray();
+      res.send(result);
+    });
+
+    //Delete User Order
+    app.delete("/allOrders/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: objectId(id) };
       const result = await ordersCollection.deleteOne(query);
       res.json(result);
     });
 
-// Add User Info 
-app.post("/addUserInfo", async (req, res) => {
-  console.log("req.body");
-  const result = await usersCollection.insertOne(req.body);
-  res.send(result);
-  console.log(result);
-});
+    // Add User Info
+    app.post("/addUserInfo", async (req, res) => {
+      console.log("req.body");
+      const result = await usersCollection.insertOne(req.body);
+      res.send(result);
+      console.log(result);
+    });
 
-     /// all order
-  app.get("/allOrders", async (req, res) => {
-    const result = await ordersCollection.find({}).toArray();
-    res.send(result);
-  });
+    //  Create A New admin
 
-//  //  Create A New admin
+    app.put("/makeAdmin", async (req, res) => {
+      console.log(req.body);
+      const filter = { email: req.body.email };
+      const result = await usersCollection.find(filter).toArray();
+      if (result) {
+        const documents = await usersCollection.updateOne(filter, {
+          $set: { role: "admin" },
+        });
+      }
+    });
 
-//  app.put("/makeAdmin", async (req, res) => {
-//   const filter = { email: req.body.email };
-//   const result = await usersCollection.find(filter).toArray();
-//   if (result) {
-//     const documents = await usersCollection.updateOne(filter, {
-//       $set: { role: "admin" },
-//     });
-//   }
-
+    // check admin or not
+    app.get("/checkAdmin/:email", async (req, res) => {
+      const result = await usersCollection
+        .find({ email: req.params.email })
+        .toArray();
+      console.log(result);
+      res.send(result);
+    });
 
     app.listen(port, () => {
       console.log("Running BikeSalesBD server on port", port);
