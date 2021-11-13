@@ -38,7 +38,7 @@ async function run() {
       console.log("Send the Data in Database", service);
       const result = await servicesCollection.insertOne(service);
       res.send(result);
-     
+      alert('Successfully Added New BiKe')
     });
 
     // Get All services
@@ -130,6 +130,22 @@ async function run() {
         });
       }
     });
+
+//  // status update
+//  app.put("/allOrders/:id", async (req, res) => {
+//   const filter = { _id:ObjectId(req.params.id) };
+//   console.log(req.params.id);
+//   const result = await ordersCollection.updateOne(filter, {
+//     $set: {
+//       status: req.body.status,
+//     },
+//   });
+
+  
+//   res.send(result);
+//   console.log(result);
+// });
+
 
     // check admin or not
     app.get("/checkAdmin/:email", async (req, res) => {
