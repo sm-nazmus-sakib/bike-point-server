@@ -6,8 +6,7 @@ const { MongoClient } = require("mongodb");
 const objectId = require("mongodb").ObjectId;
 const corse = require("cors");
 
-// User Id & Password
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.od1ig.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.gopj00k.mongodb.net/?retryWrites=true&w=majority`;
 
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
@@ -22,14 +21,14 @@ async function run() {
   try {
     // Craete Database and Collection
     await client.connect();
-    const database = client.db("BikeSalesBD");
+    const database = client.db("BikePoint");
     const servicesCollection = database.collection("services");
-    const usersCollection = client.db("BikeSalesBD").collection("users");
-    const ordersCollection = client.db("BikeSalesBD").collection("orders");
-    const reviewCollection = client.db("BikeSalesBD").collection("reviews");
+    const usersCollection = client.db("BikePoint").collection("users");
+    const ordersCollection = client.db("BikePoint").collection("orders");
+    const reviewCollection = client.db("BikePoint").collection("reviews");
 
     app.get("/", (req, res) => {
-      res.send("Running BikeSalesBD server");
+      res.send("Running BikePoint server");
     });
 
     // Send Bike  Data in Database
@@ -157,7 +156,7 @@ async function run() {
     });
 
     app.listen(port, () => {
-      console.log("Running BikeSalesBD server on port", port);
+      console.log("Running BikePoint server on port", port);
     });
   } finally {
   }
